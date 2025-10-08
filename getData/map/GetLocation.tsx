@@ -3,7 +3,6 @@ import MapComponent from "./MapComponent";
 
 function GetLocation() {
   const [location, setLocation] = useState({ lat: null, lon: null });
-
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(

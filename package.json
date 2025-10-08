@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://vietit2006.github.io/Weather_news",
+  "homepage": "https://vietit2006.github.io/Weather_news/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

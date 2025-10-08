@@ -3,23 +3,42 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import axios from "axios";
 
+
 interface Props {
-  lat: number;
-  lon: number;
   onCityIdChange: (id: number) => void;
 }
 
-function MapComponent({ lat, lon, onCityIdChange }: Props) {
+function MapComponent({ onCityIdChange }: Props) {
+  const [lat, setLat] = useState<number | null>(null);
+  const [lon, setLon] = useState<number | null>(null);
   const [address, setAddress] = useState("");
 
   useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLat(position.coords.latitude);
+        setLon(position.coords.longitude);
+      },
+      (error) => {
+        console.error("Không thể lấy vị trí:", error);
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    if (lat === null || lon === null) return;
+
     async function fetchCityId() {
       try {
         const res1 = await axios.get("https://nominatim.openstreetmap.org/reverse", {
           params: { format: "json", lat, lon },
         });
 
-        const cityName = res1.data.address.city || res1.data.address.town || res1.data.address.village || "Không xác định";
+        const cityName =
+          res1.data.address.city ||
+          res1.data.address.town ||
+          res1.data.address.village ||
+          "Không xác định";
         setAddress(cityName);
 
         if (cityName !== "Không xác định") {
@@ -29,7 +48,6 @@ function MapComponent({ lat, lon, onCityIdChange }: Props) {
               appid: import.meta.env.VITE_APP_ID,
             },
           });
-
           const cityId = res2.data.list[0]?.id;
           if (cityId) onCityIdChange(cityId);
         }
@@ -41,7 +59,7 @@ function MapComponent({ lat, lon, onCityIdChange }: Props) {
     fetchCityId();
   }, [lat, lon]);
 
-  return (
+  return lat && lon ? (
     <MapContainer center={[lat, lon]} zoom={13} style={{ height: "400px", width: "100%" }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -51,6 +69,8 @@ function MapComponent({ lat, lon, onCityIdChange }: Props) {
         <Popup>{address || "Đang tải địa chỉ..."}</Popup>
       </Marker>
     </MapContainer>
+  ) : (
+    <p>Đang lấy vị trí của bạn...</p>
   );
 }
 
