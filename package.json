@@ -9,8 +9,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-     "predeploy": "npm run build",
-  "deploy": "gh-pages -d dist"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
+    "news": "python ./getData/getNews/tojson.py",
+    "start":"json server --watch ./getData/getNews/tuoitre_articles.json --port 8000"
   },
   "dependencies": {
     "axios": "^1.12.2",
