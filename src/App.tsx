@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import MapComponent from "../getData/map/MapComponent";
 import WeatherLocation from "./wearther/WeatherLocation";
