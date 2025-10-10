@@ -11,7 +11,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "news": "python ./getData/getNews/tojson.py",
-    "start": "json-server --watch D:/weather_forecast/test/getData/getNews/tuoitre_articles.json --port 8000"
+    "start": "json-server --watch ./getData/getNews/tuoitre_articles.json --port 8000"
   },
   "dependencies": {
     "axios": "^1.12.2",
