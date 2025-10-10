@@ -23,7 +23,7 @@ from collections import deque
 from tqdm import tqdm
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; TUOITRE-Scraper/1.0; +https://example.com/bot)"
+    "User-Agent": "Mozilla/5.0 (compatible; TUOITRE-Scraper/1.0; +https://tuoitre.vn/bot)"
 }
 
 def fetch(url, session, timeout=15, max_retries=3):

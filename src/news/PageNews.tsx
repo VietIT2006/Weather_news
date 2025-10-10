@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import PaginationPageNews from "./PaginationPageNews";
+import { Link } from "react-router-dom";
 
 interface Article {
+  id: number;
   url: string;
   title: string;
   published: string;
@@ -9,17 +12,18 @@ interface Article {
   content: string;
 }
 
-export default function ArticleView() {
-  const [article, setArticle] = useState<Article | null>(null);
+export default function PageNews() {
+  const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
-    // Gọi API GET từ server local (VD: Flask, Node, Django...)
     axios
-      .get<Article>("http://localhost:8000/0")
+      .get<Article[]>("http://localhost:8000/articles")
       .then((res) => {
-        setArticle(res.data);
+        setArticles(res.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -29,32 +33,36 @@ export default function ArticleView() {
       });
   }, []);
 
-  if (loading) return <p className="text-center mt-10">⏳ Đang tải dữ liệu...</p>;
-  if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
-  if (!article) return <p className="text-center mt-10">Không có dữ liệu.</p>;
+  const paginatedArticles = articles.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
-    <div className="max-w-3xl mx-auto bg-white shadow-md rounded-2xl p-6 mt-10">
-      <h1 className="text-3xl font-bold text-blue-700 mb-2">{article.title}</h1>
+    <div className="max-w-4xl mx-auto p-6 mt-10 bg-white rounded-xl shadow">
+      <h1 className="text-2xl font-bold text-blue-700 mb-4">📰 Danh sách bài viết</h1>
 
-      <p className="text-sm text-gray-500">
-        👤 {article.author} &nbsp; | &nbsp; 📅 {article.published}
-      </p>
+      {loading && <p className="text-center">⏳ Đang tải dữ liệu...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
 
-      <a
-        href={article.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-blue-500 underline mt-2 inline-block"
-      >
-        🔗 Xem bài gốc
-      </a>
+      {!loading &&
+        !error &&
+        paginatedArticles.map((article) => (
+          <div key={article.id} className="mb-4 border-b pb-2">
+            <Link
+              to={`/article/${article.id}`}
+              className="text-lg font-semibold text-blue-600 hover:underline block"
+            >
+              {article.title}
+            </Link>
+          </div>
+        ))}
 
-      <hr className="my-4" />
-
-      <div className="whitespace-pre-line leading-relaxed text-gray-800">
-        {article.content}
-      </div>
+      <PaginationPageNews
+        currentPage={currentPage}
+        totalPages={Math.ceil(articles.length / itemsPerPage)}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
     </div>
   );
 }

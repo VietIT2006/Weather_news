@@ -1,9 +1,10 @@
 import json
 import re
 
-input_file = r"D:\weather_forecast\test\getData\getNews\tuoitre_articles.txt"
+input_file = r"D:/weather_forecast/test/getData/getNews/tuoitre_articles.txt"
 
-output_file = "D:\weather_forecast\test\getData\getNews\tuoitre_articles.json"
+output_file = "D:/weather_forecast/test/getData/getNews/tuoitre_articles.json"
+
 
 articles = []
 with open(input_file, "r", encoding="utf-8") as f:
